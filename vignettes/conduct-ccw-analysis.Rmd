@@ -251,3 +251,17 @@ table(compete_ccw$outcome)
 
 head(compete_ccw)
 ```
+
+
+# Winsorizing weights
+
+You can trim/winsorize extreme weights using the `winsorize_ccw_weights()` function:
+
+```{r}
+compete_ccw_trim <- compete_ccw |>
+  winsorize_ccw_weights(quantiles = c(0.10, 0.90))
+
+max(compete_ccw$weight_cox)
+max(compete_ccw_trim$weight_cox)
+
+```

@@ -68,6 +68,9 @@ generate_ccw <- function(df, predvars) {
 
    # Combine 
    df <- rbind(df_0, df_1)
+   
+   # Save weight name @TODO make more flexible to do other weight types
+   attributes(df)$weight_name <- "weight_cox"
 
    # Check that all clones have weights
    if (any(is.na(df$weight_cox))) {
