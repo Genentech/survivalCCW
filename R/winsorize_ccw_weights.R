@@ -10,7 +10,7 @@
 #' @return The same data.frame with weights winsorized.
 #' 
 #' @export
-#' 
+#' @importFrom stats quantile
 #' @examples 
 #' 
 #' # Load the toy dataset
@@ -28,7 +28,7 @@
 #' clones_long <- cast_clones_to_long(clones)
 #' clones_long_w <- generate_ccw(clones_long, predvars = c("age"))
 #' clones_long_w_wins <- winsorize_ccw_weights(clones_long_w)
-winsorize_ccw_weights <- function(df, quantiles, per_clone = FALSE) {
+winsorize_ccw_weights <- function(df, quantiles = c(0.01, 0.99), per_clone = FALSE) {
 
    # Check inputs
    checkmate::assert_class(df, "ccw_clones_long_weights")

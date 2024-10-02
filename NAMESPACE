@@ -3,3 +3,5 @@
 export(cast_clones_to_long)
 export(create_clones)
 export(generate_ccw)
+export(winsorize_ccw_weights)
+importFrom(stats,quantile)
