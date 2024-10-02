@@ -32,8 +32,9 @@ winsorize_ccw_weights <- function(df, quantiles, per_clone = FALSE) {
 
    # Check inputs
    checkmate::assert_class("ccw_clones_long_weights")
-   if (!all(c("outcome", "fup_outcome", "censor", "fup_censor", "clone", "t_start", "t_stop", "time_id", "t_event", attributes(df)$weight_name) %in% names(df))) {
-      stop("The input data.frame is missing at least one of the required columns: outcome, fup_outcome, censor, fup_censor, clone, t_start, t_stop, time_id, t_event, ", attributes(df)$weight_name, ". Did you remove this?")
+   weight_name <- attributes(df)$weight_name
+   if (!all(c("outcome", "fup_outcome", "censor", "fup_censor", "clone", "t_start", "t_stop", "time_id", "t_event", weight_name) %in% names(df))) {
+      stop("The input data.frame is missing at least one of the required columns: outcome, fup_outcome, censor, fup_censor, clone, t_start, t_stop, time_id, t_event, ", weight_name, ". Did you remove this?")
    }
 
    # Check quantiles
@@ -44,8 +45,26 @@ winsorize_ccw_weights <- function(df, quantiles, per_clone = FALSE) {
       stop("quantiles must be between 0 and 1.")
    }
 
-   # Winsorize the weights
-   periods <- unique(df$time_id)
-   
+   # Group
+   if (per_clone) {
+      grouping_factor <- interaction(df$time_id, df$clone)
+   } else {
+      grouping_factor <- df$time_id
+   }
+
+   # Get quantiles
+   quantile_values <- tapply(df[[weight_name]], grouping_factor, FUN = quantile, probs = quantiles)
+
+   # Winsorize
+   unique_groups <- unique(grouping_factor)
+   for (group in unique_groups) {
+      lower_bound <- quantile_values[[as.character(group)]][1]
+      upper_bound <- quantile_values[[as.character(group)]][2]
+      df[grouping_factor == group, weight_name] <- pmin(pmax(df[grouping_factor == group, weight_name], lower_bound), upper_bound)
+   }
+
+   # Return
+   return(df)
+
 
 }
