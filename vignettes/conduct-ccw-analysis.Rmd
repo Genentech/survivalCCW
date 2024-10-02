@@ -28,7 +28,6 @@ The CCW toy dataset published by Maringe uses this exact setting as the motivati
 
 ```{r}
 library(survivalCCW)
-library(dplyr)
 head(toy_df)
 ```
 
