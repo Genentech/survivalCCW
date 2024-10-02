@@ -264,4 +264,4 @@ compete_ccw_trim <- compete_ccw |>
 max(compete_ccw$weight_cox)
 max(compete_ccw_trim$weight_cox)
 
-``
+```
