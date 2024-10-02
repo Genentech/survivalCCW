@@ -806,6 +806,20 @@ used.</p>
 <span><span class="co">#&gt; 5          16       0     16      10 -7.420857 10 176.4477 0.8997594   1.111408</span></span>
 <span><span class="co">#&gt; 6          18       0     18      16 -7.420857 16 181.2410 0.8971813   1.114602</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="winsorizing-weights">Winsorizing weights<a class="anchor" aria-label="anchor" href="#winsorizing-weights"></a>
+</h2>
+<p>You can trim/winsorize extreme weights using the
+<code><a href="../reference/winsorize_ccw_weights.html">winsorize_ccw_weights()</a></code> function:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">compete_ccw_trim</span> <span class="op">&lt;-</span> <span class="va">compete_ccw</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/winsorize_ccw_weights.html">winsorize_ccw_weights</a></span><span class="op">(</span>quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.10</span>, <span class="fl">0.90</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">compete_ccw</span><span class="op">$</span><span class="va">weight_cox</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 21.62294</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">compete_ccw_trim</span><span class="op">$</span><span class="va">weight_cox</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 2.75609</span></span></code></pre></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
