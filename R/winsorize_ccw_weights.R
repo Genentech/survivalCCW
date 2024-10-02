@@ -31,7 +31,7 @@
 winsorize_ccw_weights <- function(df, quantiles, per_clone = FALSE) {
 
    # Check inputs
-   checkmate::assert_class("ccw_clones_long_weights")
+   checkmate::assert_class(df, "ccw_clones_long_weights")
    weight_name <- attributes(df)$weight_name
    if (!all(c("outcome", "fup_outcome", "censor", "fup_censor", "clone", "t_start", "t_stop", "time_id", "t_event", weight_name) %in% names(df))) {
       stop("The input data.frame is missing at least one of the required columns: outcome, fup_outcome, censor, fup_censor, clone, t_start, t_stop, time_id, t_event, ", weight_name, ". Did you remove this?")
@@ -43,6 +43,9 @@ winsorize_ccw_weights <- function(df, quantiles, per_clone = FALSE) {
    }
    if (any(quantiles < 0) | any(quantiles > 1)) {
       stop("quantiles must be between 0 and 1.")
+   }
+   if (quantiles[1] >= quantiles[2]) {
+      stop("The first quantile must be smaller than the second quantile.")
    }
 
    # Group
