@@ -13,7 +13,9 @@ Suggests:
     knitr,
     rmarkdown,
     boot,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    vdiffr,
+    ggplot2
 VignetteBuilder: knitr
 Depends: 
     R (>= 4.1.0)
