@@ -59,12 +59,18 @@ create_clones_check_inputs <- function(
       stop("You passed the same column name twice")
    }
 
-   # Check that the respective columns are numeric
+   # Check that the respective columns are numeric and appropriately ranged
    checkmate::assert_numeric(df[, time_to_event])
    checkmate::assert_numeric(df[, time_to_exposure])
    checkmate::assert_true(class(df[,event]) %in% c("integer", "logical"))
    checkmate::assert_true(class(df[,exposure]) %in% c("integer", "logical"))
    checkmate::assert_true(class(df[,id]) %in% c("integer", "numeric", "character"))
+   if (any(df[, time_to_event] < 0)) {
+      stop("Time to event cannot be negative")
+   }
+   if (any(df[, time_to_exposure] < 0, na.rm = TRUE)) {
+      stop("Time to exposure cannot be negative")
+   }
 
    # Some protected names
    protected_names <- c("clone", "outcome", "fup_outcome", "censor", "fup_censor", 
