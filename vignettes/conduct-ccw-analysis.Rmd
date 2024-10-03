@@ -115,6 +115,14 @@ Let's pick out a single patient and look at their data:
 print(clones_long_weights[clones_long_weights$id == "P5913", ], row.names = FALSE)
 ```
 
+You can also visualize weights over time with `plot_ccw_over_time()` and mean values over time with
+`plot_var_mean_over_time()`.
+
+```{r}
+clones_long_weights |>
+  plot_var_mean_over_time("age")
+```
+
 # Evaluate outcomes 
 
 We now have everything we need to conduct a CCW analysis. For instance, we can pipe things together to evaluate the hazard ratio for surgery vs no surgery:
