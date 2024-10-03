@@ -254,3 +254,39 @@ test_that("Outcomes before exposure dates are caught", {
   )
 
 })
+
+
+test_that("Time to event cannot be negative", {
+
+  df <- data.frame(
+    id = c(1, 2, 3, 4),
+    event = c(1L, 1L, 0L, 0L),
+    time_to_event = c(1, 2, -1, 2),
+    exposure = c(1L, 1L, 0L, 1L),
+    time_to_exposure = c(0.9, 1.9, NA_real_, 1.3)
+  )
+
+  expect_error(
+    create_clones_check_inputs(df, id = "id", event = "event", time_to_event = "time_to_event", exposure = "exposure", time_to_exposure = "time_to_exposure", ced_window = 1.0),
+    "Time to event cannot be negative"
+  )
+
+})
+
+
+test_that("Time to exposure cannot be negative", {
+
+  df <- data.frame(
+    id = c(1, 2, 3, 4),
+    event = c(1L, 1L, 0L, 0L),
+    time_to_event = c(1, 2, 1, 2),
+    exposure = c(1L, 1L, 1L, 1L),
+    time_to_exposure = c(0.9, 1.9, -2, 1.3)
+  )
+
+  expect_error(
+    create_clones_check_inputs(df, id = "id", event = "event", time_to_event = "time_to_event", exposure = "exposure", time_to_exposure = "time_to_exposure", ced_window = 1.0),
+    "Time to exposure cannot be negative"
+  )
+
+})
