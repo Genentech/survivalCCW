@@ -69,5 +69,4 @@ winsorize_ccw_weights <- function(df, quantiles = c(0.01, 0.99), per_clone = FAL
    # Return
    return(df)
 
-
 }

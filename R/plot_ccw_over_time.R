@@ -24,8 +24,8 @@ utils::globalVariables(c("clone", "t_start", "value", "metric"))
 #' 
 #' clones_long <- cast_clones_to_long(clones)
 #' clones_long_w <- generate_ccw(clones_long, predvars = c("age"))
-#' visualize_ccw_over_time(clones_long_w)
-visualize_ccw_over_time <- function(df) {
+#' plot_ccw_over_time(clones_long_w)
+plot_ccw_over_time <- function(df) {
 
    # Confirm ggplot2 loaded
    if (!requireNamespace("ggplot2", quietly = TRUE)) {
@@ -35,6 +35,7 @@ visualize_ccw_over_time <- function(df) {
    # Confirm inputs are correct
    checkmate::assert_class(df, "ccw_clones_long_weights")
    weight_name <- attributes(df)$weight_name
+   ced_window <- attributes(df)$ced_window
 
    # Calculate mean, median, 25th and 75th quantiles, min, max
    summary_df <- aggregate(df[[weight_name]], by = list(clone = df$clone, t_start = df$t_start), 
@@ -64,9 +65,10 @@ visualize_ccw_over_time <- function(df) {
       ggplot2::scale_color_manual(values = c("#1f1fee", "#13b313")) +
       ggplot2::scale_linetype_manual(values = linetypes) +
       ggplot2::scale_alpha_manual(values = alphas) +
+      ggplot2::geom_vline(ggplot2::aes(xintercept = ced_window), linetype = "dashed") +
       ggplot2::labs(title = "Weights over time",
            x = "Time",
-           y = "Weight",
+           y = weight_name,
            linetype = "Metric",
            alpha = "Metric",
            color = "Clone")

@@ -13,7 +13,7 @@ test_that("Plots are the same as previously", {
 
   vdiffr::expect_doppelganger(
     title = "Weights over time",
-    visualize_ccw_over_time(clones_long_w)
+    plot_ccw_over_time(clones_long_w)
   )
 
 })
