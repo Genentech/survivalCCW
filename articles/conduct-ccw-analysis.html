@@ -583,6 +583,13 @@ this for us.</p>
 <span><span class="co">#&gt;        0    104     102  5.653693 102      0        1          1</span></span>
 <span><span class="co">#&gt;        0    106     104  5.653693 104      0        1          1</span></span>
 <span><span class="co">#&gt;        1    109     106  5.653693 106      0        1          1</span></span></code></pre></div>
+<p>You can also visualize weights over time with
+<code><a href="../reference/plot_ccw_over_time.html">plot_ccw_over_time()</a></code> and mean values over time with
+<code><a href="../reference/plot_var_mean_over_time.html">plot_var_mean_over_time()</a></code>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">clones_long_weights</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/plot_var_mean_over_time.html">plot_var_mean_over_time</a></span><span class="op">(</span><span class="st">"age"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="conduct-ccw-analysis_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="evaluate-outcomes">Evaluate outcomes<a class="anchor" aria-label="anchor" href="#evaluate-outcomes"></a>
@@ -590,7 +597,7 @@ this for us.</p>
 <p>We now have everything we need to conduct a CCW analysis. For
 instance, we can pipe things together to evaluate the hazard ratio for
 surgery vs no surgery:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/therneau/survival" class="external-link">survival</a></span><span class="op">)</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">toy_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/create_clones.html">create_clones</a></span><span class="op">(</span></span>
@@ -620,7 +627,7 @@ this analysis, as the cloning process renders the variance invalid. The
 simplest approach to addressing this is to bootstrap the variance. I
 have not made a function to do this yet, but leave the below as an
 example of how to do this.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">boot</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'boot'</span></span>
@@ -692,7 +699,7 @@ example of how to do this.</p>
 <div class="section level3">
 <h3 id="hazard-ratios">Hazard ratios<a class="anchor" aria-label="anchor" href="#hazard-ratios"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot.ci</a></span><span class="op">(</span><span class="va">boot_out</span>, type <span class="op">=</span> <span class="st">"norm"</span>, index <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS</span></span>
 <span><span class="co">#&gt; Based on 10 bootstrap replicates</span></span>
@@ -708,7 +715,7 @@ example of how to do this.</p>
 <div class="section level3">
 <h3 id="rmst">RMST<a class="anchor" aria-label="anchor" href="#rmst"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot.ci</a></span><span class="op">(</span><span class="va">boot_out</span>, type <span class="op">=</span> <span class="st">"norm"</span>, index <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS</span></span>
 <span><span class="co">#&gt; Based on 10 bootstrap replicates</span></span>
@@ -724,7 +731,7 @@ example of how to do this.</p>
 <div class="section level3">
 <h3 id="year-survival">1-year survival<a class="anchor" aria-label="anchor" href="#year-survival"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/boot/man/boot.ci.html" class="external-link">boot.ci</a></span><span class="op">(</span><span class="va">boot_out</span>, type <span class="op">=</span> <span class="st">"norm"</span>, index <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS</span></span>
 <span><span class="co">#&gt; Based on 10 bootstrap replicates</span></span>
@@ -744,7 +751,7 @@ example of how to do this.</p>
 <p>The extension of the package functionality to issues of competing
 risks is trivial. We keep our outcome variable as an integer but add
 additional values.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">toy_df</span><span class="op">$</span><span class="va">competing</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">toy_df</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">toy_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      id surgery timetosurgery death sex charlson perf stage emergency fup_obs</span></span>
@@ -765,7 +772,7 @@ additional values.</p>
 <code>competing</code> variable as the outcome. The bootstrapped
 analysis is not shown, but you can see that hte same approach can be
 used.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">compete_ccw</span> <span class="op">&lt;-</span> <span class="va">toy_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/create_clones.html">create_clones</a></span><span class="op">(</span></span>
 <span>    id <span class="op">=</span> <span class="st">'id'</span>,</span>
@@ -811,7 +818,7 @@ used.</p>
 </h2>
 <p>You can trim/winsorize extreme weights using the
 <code><a href="../reference/winsorize_ccw_weights.html">winsorize_ccw_weights()</a></code> function:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">compete_ccw_trim</span> <span class="op">&lt;-</span> <span class="va">compete_ccw</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/winsorize_ccw_weights.html">winsorize_ccw_weights</a></span><span class="op">(</span>quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.10</span>, <span class="fl">0.90</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
