@@ -71,6 +71,9 @@ plot_var_mean_over_time <- function(df, var) {
    
    # Convert metric to factor
    summary_long$metric <- factor(summary_long$metric, levels = c("unweighted_mean", "weighted_mean"), labels = c("Unweighted", "Weighted"))
+
+   # Remove NAs (these are periods with only changes in one of the 2 clones)
+   summary_long <- summary_long[!is.na(summary_long$clone), ]
    
    # Plot
    p <- ggplot2::ggplot(summary_long, ggplot2::aes(x = t_start, y = value, color = factor(clone))) +

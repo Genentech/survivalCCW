@@ -1,0 +1,116 @@
+---
+title: "Outputs and screenshots for survivalCCW cheat sheet"
+author: Matthew Secrest
+output: rmarkdown::html_vignette
+---
+
+
+```{css, echo=FALSE}
+.custom-chunk pre {
+  background-color: #d9f7ff;
+}
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(survival)
+library(gtsummary)
+devtools::load_all()
+```
+
+
+
+# Simulate data
+
+```{r class.source="custom-chunk"}
+set.seed(123)
+
+# Number of patients
+num_patients <- 100
+
+# Simulate data
+set.seed(123)  # For reproducibility
+patient_id <- 1:num_patients
+event_flag <- 1 - sample(c(0, 1), num_patients, replace = TRUE)
+exposure_variable <- sample(c(0, 1), num_patients, replace = TRUE)
+time_to_exposure <- ifelse(exposure_variable == 1, runif(num_patients, min = 0, max = 500), NA)
+time_to_event <- ifelse(exposure_variable == 1, time_to_exposure + runif(num_patients, min = 1, max = 500), runif(num_patients, min = 1, max = 1000))  # Ensure event occurs after exposure for exposed patients
+
+# Covariate that differs between exposed and unexposed
+cov1 <- ifelse(exposure_variable == 1, rnorm(num_patients, mean = 5, sd = 1), rnorm(num_patients, mean = 0, sd = 1))
+
+# Create data frame and round the values to 1 decimal place
+df <- data.frame(
+  patient_id = patient_id,
+  event_flag = as.integer(event_flag),
+  time_to_event = round(time_to_event, 1),
+  exposure_variable = as.integer(exposure_variable),
+  time_to_exposure = round(time_to_exposure, 1),
+  cov1 = round(cov1, 1)
+)
+
+# Print the first few rows of the simulated data without row names
+df |> head() |> knitr::kable(row.names = FALSE)
+```
+
+# Create clones
+
+```{r, message = FALSE, warning = FALSE}
+
+clones <- create_clones(
+  df = df,
+  id = 'patient_id',
+  event = 'event_flag',
+  time_to_event = 'time_to_event',
+  exposure = 'exposure_variable',
+  time_to_exposure = 'time_to_exposure',
+  ced_window = 200
+)
+
+clones[,c("patient_id", "clone", "outcome", "fup_outcome", "censor", "fup_censor", "cov1")] |> head() |> knitr::kable(row.names = FALSE)
+```
+
+# Cast clones to long
+```{r, message = FALSE, warning = FALSE}
+
+clones_long <- cast_clones_to_long(clones)
+
+clones_long[,c("patient_id", "clone", "time_id", "t_start", "t_stop","outcome", "fup_outcome", "censor", "fup_censor", "cov1")] |> head(5) |> knitr::kable(row.names = FALSE)
+```
+
+# Generate CCW
+
+```{r, message = FALSE, warning = FALSE}
+
+ccw_weights <- generate_ccw(
+   clones_long, 
+   predvars = c("cov1")
+)
+
+ccw_weights[,c("patient_id", "outcome", "t_start", "t_stop", "clone", "weight_cox")] |> head(5)|> knitr::kable(row.names = FALSE)
+```
+
+# Evaluate outcomes
+```{r, message = FALSE, warning = FALSE}
+res <- coxph(
+   Surv(t_start, t_stop, outcome) ~ clone, 
+   data = clones_long, 
+   weights = ccw_weights$weight_cox
+)
+summary(res)
+tbl_regression(res,  exponentiate = TRUE, conf.int = FALSE)
+```
+
+# Plot CCW over time
+
+```{r, fig.width=4, fig.height=3, dpi = 100}
+plot_ccw_over_time(ccw_weights)
+```
+
+# Plot vars over time
+```{r, fig.width=4, fig.height=3, dpi = 100}
+plot_var_mean_over_time(ccw_weights, "cov1")
+```

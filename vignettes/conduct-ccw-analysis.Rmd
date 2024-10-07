@@ -73,7 +73,6 @@ clones <- create_clones(
   ced_window = 182.62
 )
 
-head(clones)
 ```
 
 
