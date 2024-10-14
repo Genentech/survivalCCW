@@ -120,6 +120,7 @@ plot_censoring_over_time <- function(df) {
          x = "Time",
          y = "Cumulative N censored",
          color = "Censorship type"
-      )
+      ) + 
+      ggplot2::theme(legend.position = "bottom")
 
 }
