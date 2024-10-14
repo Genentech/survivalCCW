@@ -1,5 +1,7 @@
 test_that("Plots are the same as previously", {
 
+  library(ggplot2)
+
   clones <- create_clones(toy_df, 
                           id = "id", 
                           event = "death", 

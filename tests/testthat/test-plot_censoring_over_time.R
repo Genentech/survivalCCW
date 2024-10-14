@@ -2,6 +2,10 @@ test_that("Plots are the same as previously", {
 
   library(ggplot2)
 
+  # Load the toy dataset
+  data(toy_df)
+  
+  # Create clones
   clones <- create_clones(toy_df, 
                           id = "id", 
                           event = "death", 
@@ -10,12 +14,13 @@ test_that("Plots are the same as previously", {
                           time_to_exposure = "timetosurgery", 
                           ced_window = 365.25/2)
 
-  clones_long <- cast_clones_to_long(clones)
-  clones_long_w <- generate_ccw(clones_long, predvars =  c("age", "sex", "perf", "stage", "deprivation", "charlson", "emergency"))
+  # Generate the plot
+  plot <- plot_censoring_over_time(clones)
 
+  # Use vdiffr to check if the plot is the same as previously
   vdiffr::expect_doppelganger(
-    title = "Age over time",
-    plot_var_mean_over_time(clones_long_w, "age")
+    title = "Censoring over time",
+    plot
   )
 
 })
