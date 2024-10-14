@@ -75,8 +75,7 @@ clones[,c("patient_id", "clone", "outcome", "fup_outcome", "censor", "fup_censor
 
 ## Plot censorship over time
 ```{r, fig.width=6, fig.height=3, dpi = 100}
-plot_censoring_over_time(clones) + ggplot2::theme(legend.position="bottom")
-
+plot_censoring_over_time(clones)
 ```
 
 # Cast clones to long
