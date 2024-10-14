@@ -82,6 +82,12 @@ Note that this object is just a `data.frame` with an additional custom class whi
 class(clones)
 ```
 
+You can visualize the censoring over time after you create the clones:
+
+```{r}
+plot_censoring_over_time(clones)
+```
+
 
 # Cast to long format
 Now we simply need to cast the data to long format. The `survivalCCW` function `cast_to_long` will do this for us. 
