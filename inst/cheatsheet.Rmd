@@ -73,6 +73,12 @@ clones <- create_clones(
 clones[,c("patient_id", "clone", "outcome", "fup_outcome", "censor", "fup_censor", "cov1")] |> head() |> knitr::kable(row.names = FALSE)
 ```
 
+## Plot censorship over time
+```{r, fig.width=6, fig.height=3, dpi = 100}
+plot_censoring_over_time(clones) + ggplot2::theme(legend.position="bottom")
+
+```
+
 # Cast clones to long
 ```{r, message = FALSE, warning = FALSE}
 
