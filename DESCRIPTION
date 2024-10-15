@@ -1,6 +1,6 @@
 Package: survivalCCW
 Title: An R Package for Clone Censor Weighting (CCW) Survival Analyses
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: 
     person("Matthew", "Secrest", , "secrmatt@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0939-4902"))
