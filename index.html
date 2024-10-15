@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">survivalCCW</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.5</span>
       </span>
     </div>
 
@@ -76,7 +76,42 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>This is a work-in-progress package that conducts clone censor weight analyses in R. Please use at your own risk. Consider filing a bug report or reaching out to <a href="mailto:secrmatt@gmail.com">Matt</a> for questions/comments/suggestions.</p>
+<p>This is a light-weight package that helps structure data for clone censor weighting (CCW) analyses of time-to-event endpoints in R. The specific approach and example dataset are attributable to Maringe 2020.</p>
+<div class="section level2">
+<h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
+</h2>
+<p>Estimating the effect of non-randomized treatments in observational studies can be challenging because a patient’s treatment allocation is often unknown until their treatment strategy is initiated. Using the observed treatment strategy naively often results in immortal time bias, among other biases. Consider, for example, the effect of treatment duration on overall survival. A naive analysis that compares patients who were observed to receive treatment for longer would suffer from immortal time bias because longer treatment duration is related to longer survival. Traditional methods for addressing such bias include landmark analyses, which suffer from selection bias and reduced power, and time-dependent Cox models, which prevent the estimation of absolute risks and lead to less interpretable estimands. Clone censor weighting (CCW) is a robust approach that addresses immortal time bias while maintaining study power and interpretability and allowing for absolute risk estimation.</p>
+<p>CCW can be time-consuming to implement, not only because it is a novel method which is unfamiliar to most applied biostatisticians, but also because it involves nuanced data manipulation. All patients are cloned and assigned to either treated or untreated at baseline; they are then cast into “long” follow-up format, with one row for each patient-clone-period combination; finally, inverse probability of censorship weights are calculated for each patient-clone-period.</p>
+</div>
+<div class="section level2">
+<h2 id="survivalccw">{survivalCCW}<a class="anchor" aria-label="anchor" href="#survivalccw"></a>
+</h2>
+<p>To facilitate the easy adoption of CCW and provide a standard approach, we introduce {survivalCCW}, a light-weight, open-source R package designed to streamline the process of performing survival analyses using CCW. The package provides functions to format data, calculate weights (using the baseline hazard approach; Gaber 2024), and perform survival analyses with ease. The workflow of {survivalCCW} is intuitive and user-friendly, facilitating rapid data manipulation and inference.</p>
+<p>An illustrative example is shown below. {survivalCCW} additionally contains vignettes that show how to bootstrap confidence intervals within the context of the CCW.</p>
+<pre><code><span><span class="va">df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/create_clones.html">create_clones</a></span><span class="op">(</span></span>
+<span>    id <span class="op">=</span> <span class="st">'id'</span>,</span>
+<span>    event <span class="op">=</span> <span class="st">'competing'</span>,</span>
+<span>    time_to_event <span class="op">=</span> <span class="st">'fup_obs'</span>,</span>
+<span>    exposure <span class="op">=</span> <span class="st">'surgery'</span>,</span>
+<span>    time_to_exposure <span class="op">=</span> <span class="st">'timetosurgery'</span>,</span>
+<span>    ced_window <span class="op">=</span> <span class="fl">365.25</span><span class="op">/</span><span class="fl">2</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/cast_clones_to_long.html">cast_clones_to_long</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/generate_ccw.html">generate_ccw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'age'</span>, <span class="st">'sex'</span>, <span class="st">'perf'</span>, <span class="st">'stage'</span>, <span class="st">'deprivation'</span>, <span class="st">'charlson'</span>, <span class="st">'emergency'</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<p>As an open-source package maintained by the Roche Statistical Engineering team, {survivalCCW} is validated, tested, and continually improving. Interested users can find {survivalCCW} on CRAN or the Genentech Github: github.com/Genentech/survivalCCW. The tutorial can be found <a href="https://genentech.github.io/survivalCCW/articles/conduct-ccw-analysis.html" class="external-link">here</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="bug-reports">Bug reports<a class="anchor" aria-label="anchor" href="#bug-reports"></a>
+</h2>
+<p>Please report any issues or bugs <a href="github.com/Genentech/survivalCCW/issues">here</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>Gaber, Charles E., et al. “The Clone-Censor-Weight Method in Pharmacoepidemiologic Research: Foundations and Methodological Implementation.” Current Epidemiology Reports (2024): 1-11.</p>
+<p>Maringe, Camille, et al. “Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data.” International journal of epidemiology 49.5 (2020): 1719-1729.</p>
+</div>
 </div>
   </div>
 
@@ -107,7 +142,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/mattsecrest/survivalCCW" class="external-link"><img src="https://img.shields.io/static/v1.svg?label=github.com/mattsecrest&amp;message=v.0.0.4&amp;color=DC0073" alt="Version"></a></li>
+<li><a href="https://github.com/mattsecrest/survivalCCW" class="external-link"><img src="https://img.shields.io/static/v1.svg?label=github.com/mattsecrest&amp;message=v.0.0.5&amp;color=DC0073" alt="Version"></a></li>
 <li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: maturing"></a></li>
 </ul>
 </div>
