@@ -100,7 +100,7 @@ class(clones)
 
 You can visualize the censoring over time after you create the clones:
 
-```{r}
+```{r, fig.align = 'center', fig.width=6, fig.height=4, dpi = 100}
 plot_censoring_over_time(clones)
 ```
 
@@ -168,12 +168,12 @@ clones_long_weights[clones_long_weights$id == "P5913", ] |>
 You can also visualize weights over time with `plot_ccw_over_time()` and mean values over time with
 `plot_var_mean_over_time()`.
 
-```{r}
+```{r, fig.align = 'center', fig.width=6, fig.height=4, dpi = 100}
 clones_long_weights |>
   plot_ccw_over_time()
 ```
 
-```{r}
+```{r, fig.align = 'center', fig.width=6, fig.height=4, dpi = 100}
 clones_long_weights |>
   plot_var_mean_over_time("age")
 ```
