@@ -1,3 +1,6 @@
+# survivalCCW 0.0.5
+* Additional documentation, plotting functions
+
 # survivalCCW 0.0.4
 * Bug fix in `generate_ccw` function
 

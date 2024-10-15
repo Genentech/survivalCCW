@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 # Clone Censor Weighting
 
-This lightweight package describes how to conduct clone-censor weighting (CCW) to address the problem of immortal time bias in survival analysis. This vignette will walk through the applied tutorial published by [Maringe et al 2020](https://academic.oup.com/ije/article/49/5/1719/5835351). Refer to [Hernan and Robins 2016](https://doi.org/10.1093/aje/kwv254) and [Hernan et al 2016](https://doi.org/10.1016/j.jclinepi.2016.04.014) for more technical details.
+This lightweight package describes how to conduct clone-censor weighting (CCW) to address the problem of immortal time bias in survival analysis. This vignette will walk through the applied tutorial published by [Maringe et al 2020](https://academic.oup.com/ije/article/49/5/1719/5835351). Refer to [Gaber et al 2024](https://doi.org/10.1007/s40471-024-00346-2) for more details on CCW in practice and to [Hernan and Robins 2016](https://doi.org/10.1093/aje/kwv254) for more technical details.
 
 # Context
 
@@ -26,9 +26,18 @@ CCW is useful in the presence of immortal person-time bias in observational stud
 
 The CCW toy dataset published by Maringe uses this exact setting as the motivating example. Let's explore the dataset, which comes with `survivalCCW`.
 
-```{r}
+```{r, warning = FALSE}
 library(survivalCCW)
-head(toy_df)
+library(DT) # For better printing of data.frames
+
+head(toy_df) |>
+  DT::datatable(
+    rownames = FALSE, 
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE
+    )
+  )
 ```
 
 Column descriptions can be found with `?toy_df`:
@@ -73,7 +82,14 @@ clones <- create_clones(
   ced_window = 182.62
 )
 
-head(clones)
+head(clones) |>
+  DT::datatable(
+    rownames = FALSE, 
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE
+    )
+  )
 ```
 
 
@@ -84,7 +100,7 @@ class(clones)
 
 You can visualize the censoring over time after you create the clones:
 
-```{r}
+```{r, fig.align = 'center', fig.width=6, fig.height=4, dpi = 100}
 plot_censoring_over_time(clones)
 ```
 
@@ -96,13 +112,27 @@ No additional arguments are needed (the `clones` object is an artifact that allo
 ```{r}
 clones_long <- cast_clones_to_long(clones)
 
-head(clones_long, row.names = FALSE)
+head(clones_long, row.names = FALSE) |>
+  DT::datatable(
+      rownames = FALSE, 
+      options = list(
+        scrollX = TRUE,
+        paging = FALSE
+      )
+    )
 ```
 
 Let's pick out a single patient and look at their data:
 
 ```{r}
-print(clones_long[clones_long$id == "P5913", ], row.names = FALSE)
+clones_long[clones_long$id == "P5913", ] |>
+  DT::datatable(
+    rownames = FALSE, 
+    options = list(
+      scrollX = TRUE,
+      paging = TRUE
+    )
+  )
 ```
 
 # Generate weights
@@ -112,19 +142,38 @@ Now we simply need to generate the weights. The `survivalCCW` function `generate
 ```{r}
 clones_long_weights <- generate_ccw(clones_long, predvars = c("age", "sex", "perf", "stage", "deprivation", "charlson", "emergency"))
 
-head(clones_long_weights, row.names = FALSE)
+head(clones_long_weights) |>
+  DT::datatable(
+    rownames = FALSE, 
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE
+    )
+  )
 ```
 
 Let's pick out a single patient and look at their data:
 
 ```{r}
-print(clones_long_weights[clones_long_weights$id == "P5913", ], row.names = FALSE)
+clones_long_weights[clones_long_weights$id == "P5913", ] |>
+  DT::datatable(
+    rownames = FALSE, 
+    options = list(
+      scrollX = TRUE,
+      paging = TRUE
+    )
+  )
 ```
 
 You can also visualize weights over time with `plot_ccw_over_time()` and mean values over time with
 `plot_var_mean_over_time()`.
 
-```{r}
+```{r, fig.align = 'center', fig.width=6, fig.height=4, dpi = 100}
+clones_long_weights |>
+  plot_ccw_over_time()
+```
+
+```{r, fig.align = 'center', fig.width=6, fig.height=4, dpi = 100}
 clones_long_weights |>
   plot_var_mean_over_time("age")
 ```
@@ -148,7 +197,6 @@ df <- toy_df |>
   generate_ccw(c('age', 'sex', 'perf', 'stage', 'deprivation', 'charlson', 'emergency'))
 
 coxph(Surv(t_start, t_stop, outcome) ~ clone, data = df, weights = weight_cox)
-
 ```
 
 Note that we used `outcome` and not `death` in the `coxph()` model. Still, there is of course a problem with this analysis, as the cloning process renders the variance invalid. The simplest approach to addressing this is 
@@ -242,7 +290,14 @@ as an integer but add additional values.
 
 ```{r}
 toy_df$competing <- sample(0:2, nrow(toy_df), replace = TRUE)
-head(toy_df)
+head(toy_df) |>
+  DT::datatable(
+    rownames = FALSE, 
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE
+    )
+  )
 ```
 
 We can then conduct the same analysis as before, but with the `competing` variable as the outcome. The 
@@ -263,7 +318,14 @@ compete_ccw <- toy_df |>
 
 table(compete_ccw$outcome)
 
-head(compete_ccw)
+head(compete_ccw) |>
+  DT::datatable(
+    rownames = FALSE, 
+    options = list(
+      scrollX = TRUE,
+      paging = FALSE
+    )
+  )
 ```
 
 
@@ -277,5 +339,12 @@ compete_ccw_trim <- compete_ccw |>
 
 max(compete_ccw$weight_cox)
 max(compete_ccw_trim$weight_cox)
-
 ```
+
+# References
+
+Hernán, Miguel A., and James M. Robins. "Using big data to emulate a target trial when a randomized trial is not available." American journal of epidemiology 183.8 (2016): 758-764.
+
+Gaber, Charles E., et al. "The Clone-Censor-Weight Method in Pharmacoepidemiologic Research: Foundations and Methodological Implementation." Current Epidemiology Reports (2024): 1-11.
+
+Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.
