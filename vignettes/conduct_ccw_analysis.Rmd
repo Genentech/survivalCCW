@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 # Clone Censor Weighting
 
-This lightweight package describes how to conduct clone-censor weighting (CCW) to address the problem of immortal time bias in survival analysis. This vignette will walk through the applied tutorial published by [Maringe et al 2020](https://academic.oup.com/ije/article/49/5/1719/5835351). Refer to [Gaber et al 2024](https://doi.org/10.1007/s40471-024-00346-2) for more details on CCW in practice and to [Hernan and Robins 2016](https://doi.org/10.1093/aje/kwv254) for more technical details.
+This lightweight package describes how to conduct clone-censor weighting (CCW) to address the problem of immortal time bias in survival analysis. This vignette will walk through the applied tutorial published by [Maringe et al 2020](https://doi.org/10.1093/ije/dyaa057). Refer to [Gaber et al 2024](https://doi.org/10.1007/s40471-024-00346-2) for more details on CCW in practice and to [Hernan and Robins 2016](https://doi.org/10.1093/aje/kwv254) for more technical details.
 
 # Context
 
@@ -29,8 +29,9 @@ The CCW toy dataset published by Maringe uses this exact setting as the motivati
 ```{r, warning = FALSE}
 library(survivalCCW)
 library(DT) # For better printing of data.frames
+data(dummy_data)
 
-head(toy_df) |>
+head(dummy_data) |>
   DT::datatable(
     rownames = FALSE, 
     options = list(
@@ -40,19 +41,15 @@ head(toy_df) |>
   )
 ```
 
-Column descriptions can be found with `?toy_df`:
+Column descriptions can be found with `?dummy_data`:
 
-- `id`: patient identifier
-- `fup_obs`: observed follow-up time (time to death or 1 year if censored alive)
-- `death`: observed event of interest (all-cause death) 1: dead, 0: alive
-- `timetosurgery`: time to surgery (NA if no surgery)
-- `age`: age at diagnosis
-- `sex`: patient's sex
-- `perf`: performance status at diagnosis
-- `stage`: stage at diagnosis
-- `deprivation`: deprivation score
-- `charlson`: Charlson's comorbidity index
-- `emergency`: route to diagnosis
+- id: Patient identifier
+- timetoexposure: Time to exposure, continuous, NA for non-exposed patients
+- exposure: Binary, 1 = exposed, 0 = not exposed
+- event: Event occurrence, binary, 1 = event, 0 = censored
+- timetoevent: Time to event, continuous, capped at 365
+- cov1: Binary covariate - positively associated with both time-to-exposure and time-to-event
+- cov2: Continuous covariate - positively associated with both time-to-exposure and time-to-event
 
 Note that this package addresses situations in which the covariates are all defined at baseline.
 
@@ -61,11 +58,11 @@ Note that this package addresses situations in which the covariates are all defi
 The first step is to create the clones. This can be done for any time-to-event outcome using the `survivalCCW` function `create_clones`. For `create_clones` to work, we need to pass a one-row-per-patient `data.frame` with the following columns:
 
 - The id variable (in this case, `id`)
-- The traditional outcome variable which denotes censorship (0) or event (1) (in this case, `death`). Note that additional values are not yet permitted.
-- The time to the first event (in this case, `fup_obs`)
-- The exposure variable, with exposure defined **at any time prior to censorship/event** (in this case, `surgery`). Must be (0) or (1),
-- The time to exposure variable (in this case, `timetosurgery`)
-- The clinical eligibility window (in this case, we'll do 6 months)
+- The traditional outcome variable which denotes censorship (0) or event (1) (in this case, `event`). Note that additional values are not yet permitted.
+- The time to the first event (in this case, `timetoevent`)
+- The exposure variable, with exposure defined **at any time prior to censorship/event** (in this case, `exposure`). Must be (0) or (1),
+- The time to exposure variable (in this case, `timetoexposure`)
+- The clinical eligibility window (in this case, we'll do 100 time units or days)
 
 All other columns will be propogated for each patient. Let's see what this looks like in practice.
 
@@ -73,13 +70,13 @@ All other columns will be propogated for each patient. Let's see what this looks
 
 # Create clones
 clones <- create_clones(
-  df = toy_df,
+  df = dummy_data,
   id = 'id',
-  event = 'death',
-  time_to_event = 'fup_obs',
-  exposure = 'surgery',
-  time_to_exposure = 'timetosurgery',
-  ced_window = 182.62
+  event = 'event',
+  time_to_event = 'timetoevent',
+  exposure = 'exposure',
+  time_to_exposure = 'timetoexposure',
+  ced_window = 100
 )
 
 head(clones) |>
@@ -140,7 +137,7 @@ clones_long[clones_long$id == "P5913", ] |>
 Now we simply need to generate the weights. The `survivalCCW` function `generate_ccw()` will do this for us.
 
 ```{r}
-clones_long_weights <- generate_ccw(clones_long, predvars = c("age", "sex", "perf", "stage", "deprivation", "charlson", "emergency"))
+clones_long_weights <- generate_ccw(clones_long, predvars = c("cov1", "cov2"))
 
 head(clones_long_weights) |>
   DT::datatable(
@@ -155,7 +152,7 @@ head(clones_long_weights) |>
 Let's pick out a single patient and look at their data:
 
 ```{r}
-clones_long_weights[clones_long_weights$id == "P5913", ] |>
+clones_long_weights[clones_long_weights$id == "pat3462", ] |>
   DT::datatable(
     rownames = FALSE, 
     options = list(
@@ -175,7 +172,7 @@ clones_long_weights |>
 
 ```{r, fig.align = 'center', fig.width=6, fig.height=4, dpi = 100}
 clones_long_weights |>
-  plot_var_mean_over_time("age")
+  plot_var_mean_over_time("cov1")
 ```
 
 # Evaluate outcomes 
@@ -184,22 +181,22 @@ We now have everything we need to conduct a CCW analysis. For instance, we can p
 
 ```{r}
 library(survival)
-df <- toy_df |>
+df <- dummy_data |>
   create_clones(
     id = 'id',
-    event = 'death',
-    time_to_event = 'fup_obs',
-    exposure = 'surgery',
-    time_to_exposure = 'timetosurgery',
-    ced_window = 365.25/2
+    event = 'event',
+    time_to_event = 'timetoevent',
+    exposure = 'exposure',
+    time_to_exposure = 'timetoexposure',
+    ced_window = 100
   ) |>
   cast_clones_to_long() |>
-  generate_ccw(c('age', 'sex', 'perf', 'stage', 'deprivation', 'charlson', 'emergency'))
+  generate_ccw(c('cov1', 'cov2'))
 
 coxph(Surv(t_start, t_stop, outcome) ~ clone, data = df, weights = weight_cox)
 ```
 
-Note that we used `outcome` and not `death` in the `coxph()` model. Still, there is of course a problem with this analysis, as the cloning process renders the variance invalid. The simplest approach to addressing this is 
+Note that we used `outcome` and not `event` in the `coxph()` model. Still, there is of course a problem with this analysis, as the cloning process renders the variance invalid. The simplest approach to addressing this is 
 to bootstrap the variance. I have not made a function to do this yet, but leave the below as an example of how to do this.
 
 ```{r}
@@ -211,14 +208,14 @@ boot_cox <- function(data, indices) {
   ccw_df <- data[indices, ] |>
     create_clones(
       id = 'id',
-      event = 'death',
-      time_to_event = 'fup_obs',
-      exposure = 'surgery',
-      time_to_exposure = 'timetosurgery',
-      ced_window = 182.62
+      event = 'event',
+      time_to_event = 'timetoevent',
+      exposure = 'exposure',
+      time_to_exposure = 'timetoexposure',
+      ced_window = 100
     ) |>
     cast_clones_to_long() |>
-    generate_ccw(c('age', 'sex', 'perf', 'stage', 'deprivation', 'charlson', 'emergency'))
+    generate_ccw(c('cov1', 'cov2'))
     
 
   # Extract HR from CoxPH
@@ -265,7 +262,7 @@ boot_cox <- function(data, indices) {
 
 }
 
-boot_out <- boot(data = toy_df, statistic = boot_cox, R = 10)
+boot_out <- boot(data = dummy_data, statistic = boot_cox, R = 10)
 ```
 
 ## Hazard ratios
@@ -289,8 +286,8 @@ The extension of the package functionality to issues of competing risks is trivi
 as an integer but add additional values.
 
 ```{r}
-toy_df$competing <- sample(0:2, nrow(toy_df), replace = TRUE)
-head(toy_df) |>
+dummy_data$competing <- sample(0:2, nrow(dummy_data), replace = TRUE)
+head(dummy_data) |>
   DT::datatable(
     rownames = FALSE, 
     options = list(
@@ -304,17 +301,17 @@ We can then conduct the same analysis as before, but with the `competing` variab
 bootstrapped analysis is not shown, but you can see that hte same approach can be used.
 
 ```{r}
-compete_ccw <- toy_df |>
+compete_ccw <- dummy_data |>
   create_clones(
     id = 'id',
     event = 'competing',
-    time_to_event = 'fup_obs',
-    exposure = 'surgery',
-    time_to_exposure = 'timetosurgery',
-    ced_window = 365.25/2
+    time_to_event = 'timetoevent',
+    exposure = 'exposure',
+    time_to_exposure = 'timetoexposure',
+    ced_window = 100
   ) |>
   cast_clones_to_long() |>
-  generate_ccw(c('age', 'sex', 'perf', 'stage', 'deprivation', 'charlson', 'emergency'))
+  generate_ccw(c('cov1', 'cov2'))
 
 table(compete_ccw$outcome)
 

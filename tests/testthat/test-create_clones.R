@@ -92,27 +92,6 @@ test_that("All clone statuses are correct", {
 
 })
 
-test_that("Maringe results are replicated", {
-
-  df <- toy_df |>
-    create_clones(id = "id", event = "death", time_to_event = "fup_obs", exposure = "surgery", time_to_exposure = "timetosurgery", ced_window = 182.62)
-
-  df <- df[order(df$id, df$clone),]
-
-  tab <- tab[order(tab$id, tab$clone),]
-
-  # Compare each 
-  for (col in c("outcome", "fup_outcome", "censor", "fup_censor")) {
-    row.names(df) <- NULL
-    row.names(tab) <- NULL
-    expect_equal(
-      df[[col]],
-      tab[[col]],
-      tolerance = 1e-6
-    )
-  }
-
-})
 
 test_that("Study attributes are passed correctly", {
 

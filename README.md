@@ -4,7 +4,7 @@
 
 [![Version](https://img.shields.io/static/v1.svg?label=github.com/mattsecrest&message=v.0.0.5&color=DC0073)](https://github.com/mattsecrest/survivalCCW)
 [![Lifecycle:
-maturing](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental/)
+maturing](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental/)
 
 <!-- badges: end -->
 
@@ -35,10 +35,10 @@ df |>
   generate_ccw(c('age', 'sex', 'perf', 'stage', 'deprivation', 'charlson', 'emergency'))
 ```
 
-As an open-source package maintained by the Roche Statistical Engineering team, {survivalCCW} is validated, tested, and continually improving. Interested users can find {survivalCCW} on CRAN or the Genentech Github: github.com/Genentech/survivalCCW. The tutorial can be found [here](https://genentech.github.io/survivalCCW/articles/conduct-ccw-analysis.html).
+As an open-source package maintained by the Roche Statistical Engineering team, {survivalCCW} is validated, tested, and continually improving. Interested users can find {survivalCCW} on CRAN or the Genentech Github: github.com/Genentech/survivalCCW. The tutorial can be found [here](https://genentech.github.io/survivalCCW/articles/conduct_ccw_analysis.html).
 
 ## Bug reports
-Please report any issues or bugs [here](github.com/Genentech/survivalCCW/issues).
+Please report any issues or bugs [here](https://github.com/Genentech/survivalCCW/issues/).
 
 ## References
 Gaber, Charles E., et al. "The Clone-Censor-Weight Method in Pharmacoepidemiologic Research: Foundations and Methodological Implementation." Current Epidemiology Reports (2024): 1-11.

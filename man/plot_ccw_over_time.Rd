@@ -18,10 +18,10 @@ Visualize weights and variables over time
 \examples{
 
 # Load the toy dataset
-data(toy_df)
+data(dummy_data)
 
 # Create clones
-clones <- create_clones(toy_df, 
+clones <- create_clones(dummy_data, 
                         id = "id", 
                         event = "death", 
                         time_to_event = "fup_obs", 

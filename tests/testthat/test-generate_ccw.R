@@ -14,8 +14,8 @@ test_that("incorrect classes are caught", {
     "Must inherit from class 'ccw_clones_long', but has class 'data.frame'"
   )
 
-  df_long <- toy_df |>
-    create_clones(id = "id", event = "death", time_to_event = "fup_obs", exposure = "surgery", time_to_exposure = "timetosurgery", ced_window = 365.25/2) |>
+  df_long <- dummy_data |>
+    create_clones(id = "id", event = "event", time_to_event = "timetoevent", exposure = "exposure", time_to_exposure = "timetoexposure", ced_window = 365.25/2) |>
     cast_clones_to_long()
 
   attributes(df_long)$id <- NULL
@@ -35,8 +35,8 @@ test_that("incorrect classes are caught", {
 
 test_that("when predvars columns are missing, an error is thrown", {
 
-  df_long <- toy_df |>
-    create_clones(id = "id", event = "death", time_to_event = "fup_obs", exposure = "surgery", time_to_exposure = "timetosurgery", ced_window = 365.25/2) |>
+  df_long <- dummy_data |>
+    create_clones(id = "id", event = "event", time_to_event = "timetoevent", exposure = "exposure", time_to_exposure = "timetoexposure", ced_window = 100) |>
     cast_clones_to_long()
 
   expect_error(
@@ -53,10 +53,10 @@ test_that("when predvars columns are missing, an error is thrown", {
 
 test_that("categorical vars are dealt with", {
 
-  toy_df_s <- toy_df
-  toy_df_s$sandwich <- rep(c("ham", "turkey", "cheese"), length.out = NROW(toy_df_s))
+  dummy_data_s <- dummy_data
+  dummy_data_s$sandwich <- rep(c("ham", "turkey", "cheese"), length.out = NROW(dummy_data_s))
 
-  df_long <- toy_df_s |>
+  df_long <- dummy_data_s |>
     create_clones(id = "id", event = "death", time_to_event = "fup_obs", exposure = "surgery", time_to_exposure = "timetosurgery", ced_window = 365.25/2) |>
     cast_clones_to_long()
 
@@ -71,37 +71,5 @@ test_that("categorical vars are dealt with", {
     generate_ccw(df_long, predvars = "sandwich_f"),
     "At least one of the predvars columns is character/factor. In this early version of `survivalCCW`, only numeric variables are considered. Please make dummy vars on your own!"
   )
-
-})
-
-test_that("weights are adequately calculated compared to Maringe", {
-
-  df <- toy_df |>
-    create_clones(id = "id", event = "death", time_to_event = "fup_obs", exposure = "surgery", time_to_exposure = "timetosurgery", ced_window = 182.62) |>
-    cast_clones_to_long() |>
-    generate_ccw(predvars = c("age", "sex", "perf", "stage", "deprivation", "charlson", "emergency"))
-
-  df <- df[order(df$id, df$clone, df$time_id),]
-  row.names(df) <- NULL
-
-  # Compare exposed
-  data_long_cox <- data_long_cox[order(data_long_cox$id, data_long_cox$clone, data_long_cox$time_id),]
-  row.names(data_long_cox) <- NULL
-
-  # Compare all columns
-  for (col in colnames(data_long_cox)[colnames(data_long_cox) %in% colnames(df)]) {
-    row.names(df[[col]]) <- NULL
-    row.names(data_long_cox[[col]]) <- NULL
-    expect_equal(
-      df[[col]],
-      data_long_cox[[col]],
-      tolerance = 1e-6
-    )
-  }
-
-  cox_df <- survival::coxph(survival::Surv(t_start, t_stop, outcome) ~ clone, data = df, weights = weight_cox)
-  cox_data_long_cox <- survival::coxph(survival::Surv(t_start, t_stop, outcome) ~ clone, data = data_long_cox, weights = weight_cox)
-
-  expect_equal(cox_df$coefficients, cox_data_long_cox$coefficients, tolerance = 1e-6)
 
 })
