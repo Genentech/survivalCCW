@@ -8,7 +8,7 @@ maturing](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https
 
 <!-- badges: end -->
 
-This is a light-weight package that helps structure data for clone censor weighting (CCW) analyses of time-to-event endpoints in R. The specific approach and example dataset are attributable to Maringe 2020. 
+This is a light-weight package that helps structure data for clone censor weighting (CCW) analyses of time-to-event endpoints in R.
 
 ## Background
 
@@ -25,14 +25,14 @@ An illustrative example is shown below. {survivalCCW} additionally contains vign
 df |>
   create_clones(
     id = 'id',
-    event = 'competing',
-    time_to_event = 'fup_obs',
-    exposure = 'surgery',
-    time_to_exposure = 'timetosurgery',
-    ced_window = 365.25/2
+    event = 'event',
+    time_to_event = 'timetoevent',
+    exposure = 'exposure',
+    time_to_exposure = 'timetoexposure',
+    ced_window = 100
   ) |>
   cast_clones_to_long() |>
-  generate_ccw(c('age', 'sex', 'perf', 'stage', 'deprivation', 'charlson', 'emergency'))
+  generate_ccw(c('cov1', 'cov2'))
 ```
 
 As an open-source package maintained by the Roche Statistical Engineering team, {survivalCCW} is validated, tested, and continually improving. Interested users can find {survivalCCW} on CRAN or the Genentech Github: github.com/Genentech/survivalCCW. The tutorial can be found [here](https://genentech.github.io/survivalCCW/articles/conduct_ccw_analysis.html).
@@ -42,5 +42,3 @@ Please report any issues or bugs [here](https://github.com/Genentech/survivalCCW
 
 ## References
 Gaber, Charles E., et al. "The Clone-Censor-Weight Method in Pharmacoepidemiologic Research: Foundations and Methodological Implementation." Current Epidemiology Reports (2024): 1-11.
-
-Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.

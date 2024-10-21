@@ -15,11 +15,11 @@ utils::globalVariables(c("type", "value", "t", "ced_window", "N", "clone"))
 #' # Create clones
 #' clones <- create_clones(dummy_data, 
 #'                         id = "id", 
-#'                         event = "death", 
-#'                         time_to_event = "fup_obs", 
-#'                         exposure = "surgery", 
-#'                         time_to_exposure = "timetosurgery", 
-#'                         ced_window = 365.25/2)
+#'                         event = "event", 
+#'                         time_to_event = "timetoevent", 
+#'                         exposure = "exposure", 
+#'                         time_to_exposure = "timetoexposure", 
+#'                         ced_window = 100)
 #' 
 #' plot_censoring_over_time(clones)
 plot_censoring_over_time <- function(df) {

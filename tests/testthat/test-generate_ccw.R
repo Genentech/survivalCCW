@@ -15,7 +15,7 @@ test_that("incorrect classes are caught", {
   )
 
   df_long <- dummy_data |>
-    create_clones(id = "id", event = "event", time_to_event = "timetoevent", exposure = "exposure", time_to_exposure = "timetoexposure", ced_window = 365.25/2) |>
+    create_clones(id = "id", event = "event", time_to_event = "timetoevent", exposure = "exposure", time_to_exposure = "timetoexposure", ced_window = 100) |>
     cast_clones_to_long()
 
   attributes(df_long)$id <- NULL
@@ -57,7 +57,7 @@ test_that("categorical vars are dealt with", {
   dummy_data_s$sandwich <- rep(c("ham", "turkey", "cheese"), length.out = NROW(dummy_data_s))
 
   df_long <- dummy_data_s |>
-    create_clones(id = "id", event = "death", time_to_event = "fup_obs", exposure = "surgery", time_to_exposure = "timetosurgery", ced_window = 365.25/2) |>
+    create_clones(id = "id", event = "event", time_to_event = "timetoevent", exposure = "exposure", time_to_exposure = "timetoexposure", ced_window = 100) |>
     cast_clones_to_long()
 
   expect_error(

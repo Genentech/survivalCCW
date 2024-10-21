@@ -23,11 +23,11 @@
 #' # Create clones
 #' clones <- create_clones(dummy_data, 
 #'                         id = "id", 
-#'                         event = "death", 
-#'                         time_to_event = "fup_obs", 
-#'                         exposure = "surgery", 
-#'                         time_to_exposure = "timetosurgery", 
-#'                         ced_window = 365.25/2)
+#'                         event = "event", 
+#'                         time_to_event = "timetoevent", 
+#'                         exposure = "exposure", 
+#'                         time_to_exposure = "timetoexposure", 
+#'                         ced_window = 100)
 #' @references Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.
 create_clones <- function(
    df, 
