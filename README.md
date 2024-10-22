@@ -35,7 +35,7 @@ df |>
   generate_ccw(c('cov1', 'cov2'))
 ```
 
-As an open-source package maintained by the Roche Statistical Engineering team, {survivalCCW} is validated, tested, and continually improving. Interested users can find {survivalCCW} on CRAN or the Genentech Github: github.com/Genentech/survivalCCW. The tutorial can be found [here](https://genentech.github.io/survivalCCW/articles/conduct_ccw_analysis.html).
+As an open-source package maintained by the Roche Statistical Engineering team, {survivalCCW} is validated, tested, and continually improving. Interested users can find {survivalCCW} on CRAN or the Genentech Github: github.com/Genentech/survivalCCW. The tutorial can be found [here](https://genentech.github.io/survivalCCW/articles/conduct-ccw-analysis.html).
 
 ## Bug reports
 Please report any issues or bugs [here](https://github.com/Genentech/survivalCCW/issues/).
