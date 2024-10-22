@@ -28,7 +28,6 @@
 #'                         exposure = "exposure", 
 #'                         time_to_exposure = "timetoexposure", 
 #'                         ced_window = 100)
-#' @references Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.
 create_clones <- function(
    df, 
    id,

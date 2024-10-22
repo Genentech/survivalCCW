@@ -21,8 +21,6 @@
 #'                         ced_window = 100)
 #' 
 #' clones_long <- cast_clones_to_long(clones)
-#' 
-#' @references Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.
 cast_clones_to_long <- function(df) {
 
    # Check inputs

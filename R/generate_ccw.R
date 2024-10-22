@@ -25,8 +25,6 @@
 #' 
 #' clones_long <- cast_clones_to_long(clones)
 #' clones_long_w <- generate_ccw(clones_long, predvars = c("cov1"))
-#' 
-#' @references Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.
 generate_ccw <- function(df, predvars) {
    
    # Check inputs
