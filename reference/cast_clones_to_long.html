@@ -72,28 +72,24 @@
     <h2>Value</h2>
     <p>A data.frame with one row per patient per time period per clone.</p>
     </div>
-    <div id="references">
-    <h2>References</h2>
-    <p>Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.</p>
-    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load the toy dataset</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">toy_df</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">dummy_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create clones</span></span></span>
-<span class="r-in"><span><span class="va">clones</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_clones.html">create_clones</a></span><span class="op">(</span><span class="va">toy_df</span>, </span></span>
+<span class="r-in"><span><span class="va">clones</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_clones.html">create_clones</a></span><span class="op">(</span><span class="va">dummy_data</span>, </span></span>
 <span class="r-in"><span>                        id <span class="op">=</span> <span class="st">"id"</span>, </span></span>
-<span class="r-in"><span>                        event <span class="op">=</span> <span class="st">"death"</span>, </span></span>
-<span class="r-in"><span>                        time_to_event <span class="op">=</span> <span class="st">"fup_obs"</span>, </span></span>
-<span class="r-in"><span>                        exposure <span class="op">=</span> <span class="st">"surgery"</span>, </span></span>
-<span class="r-in"><span>                        time_to_exposure <span class="op">=</span> <span class="st">"timetosurgery"</span>, </span></span>
-<span class="r-in"><span>                        ced_window <span class="op">=</span> <span class="fl">365.25</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                        event <span class="op">=</span> <span class="st">"event"</span>, </span></span>
+<span class="r-in"><span>                        time_to_event <span class="op">=</span> <span class="st">"timetoevent"</span>, </span></span>
+<span class="r-in"><span>                        exposure <span class="op">=</span> <span class="st">"exposure"</span>, </span></span>
+<span class="r-in"><span>                        time_to_exposure <span class="op">=</span> <span class="st">"timetoexposure"</span>, </span></span>
+<span class="r-in"><span>                        ced_window <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating 4 patients' exposure and time-to-exposure based on CED window</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">clones_long</span> <span class="op">&lt;-</span> <span class="fu">cast_clones_to_long</span><span class="op">(</span><span class="va">clones</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

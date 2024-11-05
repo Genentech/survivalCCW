@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>An R Package for Clone Censor Weighting (CCW) Survival Analyses • survivalCCW</title>
+<title>An R Package for Clone Censor Weighting Survival Analyses • survivalCCW</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="An R Package for Clone Censor Weighting (CCW) Survival Analyses">
+<script src="pkgdown.js"></script><meta property="og:title" content="An R Package for Clone Censor Weighting Survival Analyses">
 <meta property="og:description" content="This is a work-in-progress package that conducts clone censor weight analyses in R. Please use at your own risk. Consider filing a bug report or reaching out to [Matt](mailto:secrmatt@gmail.com) for questions/comments/suggestions.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -76,7 +76,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>This is a light-weight package that helps structure data for clone censor weighting (CCW) analyses of time-to-event endpoints in R. The specific approach and example dataset are attributable to Maringe 2020.</p>
+<p>This is a light-weight package that helps structure data for clone censor weighting (CCW) analyses of time-to-event endpoints in R.</p>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -91,26 +91,25 @@
 <pre><code><span><span class="va">df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/create_clones.html">create_clones</a></span><span class="op">(</span></span>
 <span>    id <span class="op">=</span> <span class="st">'id'</span>,</span>
-<span>    event <span class="op">=</span> <span class="st">'competing'</span>,</span>
-<span>    time_to_event <span class="op">=</span> <span class="st">'fup_obs'</span>,</span>
-<span>    exposure <span class="op">=</span> <span class="st">'surgery'</span>,</span>
-<span>    time_to_exposure <span class="op">=</span> <span class="st">'timetosurgery'</span>,</span>
-<span>    ced_window <span class="op">=</span> <span class="fl">365.25</span><span class="op">/</span><span class="fl">2</span></span>
+<span>    event <span class="op">=</span> <span class="st">'event'</span>,</span>
+<span>    time_to_event <span class="op">=</span> <span class="st">'timetoevent'</span>,</span>
+<span>    exposure <span class="op">=</span> <span class="st">'exposure'</span>,</span>
+<span>    time_to_exposure <span class="op">=</span> <span class="st">'timetoexposure'</span>,</span>
+<span>    ced_window <span class="op">=</span> <span class="fl">100</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/cast_clones_to_long.html">cast_clones_to_long</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/generate_ccw.html">generate_ccw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'age'</span>, <span class="st">'sex'</span>, <span class="st">'perf'</span>, <span class="st">'stage'</span>, <span class="st">'deprivation'</span>, <span class="st">'charlson'</span>, <span class="st">'emergency'</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<span>  <span class="fu"><a href="reference/generate_ccw.html">generate_ccw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'cov1'</span>, <span class="st">'cov2'</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 <p>As an open-source package maintained by the Roche Statistical Engineering team, {survivalCCW} is validated, tested, and continually improving. Interested users can find {survivalCCW} on CRAN or the Genentech Github: github.com/Genentech/survivalCCW. The tutorial can be found <a href="https://genentech.github.io/survivalCCW/articles/conduct-ccw-analysis.html" class="external-link">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="bug-reports">Bug reports<a class="anchor" aria-label="anchor" href="#bug-reports"></a>
 </h2>
-<p>Please report any issues or bugs <a href="github.com/Genentech/survivalCCW/issues">here</a>.</p>
+<p>Please report any issues or bugs <a href="https://github.com/Genentech/survivalCCW/issues/" class="external-link">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <p>Gaber, Charles E., et al. “The Clone-Censor-Weight Method in Pharmacoepidemiologic Research: Foundations and Methodological Implementation.” Current Epidemiology Reports (2024): 1-11.</p>
-<p>Maringe, Camille, et al. “Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data.” International journal of epidemiology 49.5 (2020): 1719-1729.</p>
 </div>
 </div>
   </div>
@@ -143,7 +142,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/Genentech/survivalCCW" class="external-link"><img src="https://img.shields.io/static/v1.svg?label=github.com/Genentech&amp;message=v.0.0.5&amp;color=DC0073" alt="Version"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: maturing"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental/" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: maturing"></a></li>
 </ul>
 </div>
 
