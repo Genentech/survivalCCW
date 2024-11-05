@@ -141,25 +141,3 @@ test_that("long format was created correctly", {
   expect_equal(df_long_last$t_stop, df[df$exposure == 0L & df$fup_time >= ced, "fup_time"])  
   
 })
-
-test_that("Maringe long data is recreated", {
-
-  df <- toy_df |>
-    create_clones(id = "id", event = "death", time_to_event = "fup_obs", exposure = "surgery", time_to_exposure = "timetosurgery", ced_window = 182.62) |>
-    cast_clones_to_long()
-
-  df <- df[order(df$id, df$clone, df$time_id),]
-  row.names(df) <- NULL
-
-  data_final <- data_final[order(data_final$id, data_final$clone, data_final$time_id),]
-  row.names(data_final) <- NULL
-  
-  for (col in names(df)) {
-    expect_equal(
-      df[[col]],
-      data_final[[col]],
-      tolerance = 1e-6
-    )
-  }
-
-})

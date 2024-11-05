@@ -3,9 +3,11 @@
 #' @param df the data.frame for a single arm
 #' @param event_times_df the event times data.frame
 #' @param predvars the baseline variables for adjustment
+#' @param stop_if_var_not_estimated if TRUE, will error if a variable is dropped from the model. 
+#' Otherwise, will continue and omit the variable from the model. Default is FALSE.
 #' 
 #' @return a data.frame with weight columns included
-generate_ccw_calc_weights <- function(df,  event_times_df, predvars) {
+generate_ccw_calc_weights <- function(df,  event_times_df, predvars, stop_if_var_not_estimated = FALSE) {
 
    id <- attributes(df)$id
 
@@ -22,10 +24,21 @@ generate_ccw_calc_weights <- function(df,  event_times_df, predvars) {
    )
 
    cens_model <- survival::coxph(model_fmla, data = df, ties = "efron")
+   param_estimates <- stats::coef(cens_model)
+
+   if (any(is.na(param_estimates))) {
+      if (stop_if_var_not_estimated) {
+         stop("At least one variable is not estimated in the model. Please check the model and data.")
+      } else {
+         warning("At least one variable is not estimated in the model. This variable will be omitted from the model.")
+         param_estimates <- param_estimates[!is.na(param_estimates)]
+         predvars <- names(param_estimates)
+      }
+   }
 
    #@TODO allow factors and carry forward through previous functions
    # ref_df <- setNames(data.frame(matrix(0, nrow = 1, ncol = length(predvars))), predvars)
-   df$lp <- as.matrix(df[, predvars]) %*% stats::coef(cens_model)
+   df$lp <- as.matrix(df[, predvars]) %*% param_estimates
    baseline_hazard <- data.frame(
       survival::basehaz(cens_model, centered = FALSE)
    )

@@ -4,12 +4,15 @@
 \alias{generate_ccw}
 \title{Generate clone censor weights (CCW) on the long data.frame}
 \usage{
-generate_ccw(df, predvars)
+generate_ccw(df, predvars, stop_if_var_not_estimated = FALSE)
 }
 \arguments{
 \item{df}{A data.frame with one row per clone per observation period as returned by \code{\link[=cast_clones_to_long]{cast_clones_to_long()}}}
 
 \item{predvars}{The variables that will be used to derive weights (subset of those in your data.frame originally). At least one covariate must be used.}
+
+\item{stop_if_var_not_estimated}{if TRUE, will error if a variable is dropped from the model.
+Otherwise, will continue and omit the variable from the model. Default is FALSE.}
 }
 \value{
 The same data.frame with weights added.
@@ -20,21 +23,17 @@ Currently, the only way to generate weights is via multivariable Cox, as describ
 \examples{
 
 # Load the toy dataset
-data(toy_df)
+data(dummy_data)
 
 # Create clones
-clones <- create_clones(toy_df, 
+clones <- create_clones(dummy_data, 
                         id = "id", 
-                        event = "death", 
-                        time_to_event = "fup_obs", 
-                        exposure = "surgery", 
-                        time_to_exposure = "timetosurgery", 
-                        ced_window = 365.25/2)
+                        event = "event", 
+                        time_to_event = "timetoevent", 
+                        exposure = "exposure", 
+                        time_to_exposure = "timetoexposure", 
+                        ced_window = 100)
 
 clones_long <- cast_clones_to_long(clones)
-clones_long_w <- generate_ccw(clones_long, predvars = c("age"))
-
-}
-\references{
-Maringe, Camille, et al. "Reflection on modern methods: trial emulation in the presence of immortal-time bias. Assessing the benefit of major surgery for elderly lung cancer patients using observational data." International journal of epidemiology 49.5 (2020): 1719-1729.
+clones_long_w <- generate_ccw(clones_long, predvars = c("cov1"))
 }

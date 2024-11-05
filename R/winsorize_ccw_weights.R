@@ -14,19 +14,19 @@
 #' @examples 
 #' 
 #' # Load the toy dataset
-#' data(toy_df)
+#' data(dummy_data)
 #' 
 #' # Create clones
-#' clones <- create_clones(toy_df, 
+#' clones <- create_clones(dummy_data, 
 #'                         id = "id", 
-#'                         event = "death", 
-#'                         time_to_event = "fup_obs", 
-#'                         exposure = "surgery", 
-#'                         time_to_exposure = "timetosurgery", 
-#'                         ced_window = 365.25/2)
+#'                         event = "event", 
+#'                         time_to_event = "timetoevent", 
+#'                         exposure = "exposure", 
+#'                         time_to_exposure = "timetoexposure", 
+#'                         ced_window = 100)
 #' 
 #' clones_long <- cast_clones_to_long(clones)
-#' clones_long_w <- generate_ccw(clones_long, predvars = c("age"))
+#' clones_long_w <- generate_ccw(clones_long, predvars = c("cov1"))
 #' clones_long_w_wins <- winsorize_ccw_weights(clones_long_w)
 winsorize_ccw_weights <- function(df, quantiles = c(0.01, 0.99), per_clone = FALSE) {
 
