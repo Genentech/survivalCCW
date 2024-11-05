@@ -4,7 +4,12 @@
 \alias{generate_ccw_calc_weights}
 \title{Calculate weights for each arm of a long data.frame}
 \usage{
-generate_ccw_calc_weights(df, event_times_df, predvars)
+generate_ccw_calc_weights(
+  df,
+  event_times_df,
+  predvars,
+  stop_if_var_not_estimated = FALSE
+)
 }
 \arguments{
 \item{df}{the data.frame for a single arm}
@@ -12,6 +17,9 @@ generate_ccw_calc_weights(df, event_times_df, predvars)
 \item{event_times_df}{the event times data.frame}
 
 \item{predvars}{the baseline variables for adjustment}
+
+\item{stop_if_var_not_estimated}{if TRUE, will error if a variable is dropped from the model.
+Otherwise, will continue and omit the variable from the model. Default is FALSE.}
 }
 \value{
 a data.frame with weight columns included

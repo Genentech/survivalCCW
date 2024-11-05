@@ -4,6 +4,8 @@
 #' 
 #' @param df A data.frame with one row per clone per observation period as returned by [cast_clones_to_long()]
 #' @param predvars The variables that will be used to derive weights (subset of those in your data.frame originally). At least one covariate must be used.
+#' @param stop_if_var_not_estimated if TRUE, will error if a variable is dropped from the model. 
+#' Otherwise, will continue and omit the variable from the model. Default is FALSE.
 #' 
 #' @return The same data.frame with weights added.
 #' 
@@ -25,7 +27,7 @@
 #' 
 #' clones_long <- cast_clones_to_long(clones)
 #' clones_long_w <- generate_ccw(clones_long, predvars = c("cov1"))
-generate_ccw <- function(df, predvars) {
+generate_ccw <- function(df, predvars, stop_if_var_not_estimated = FALSE) {
    
    # Check inputs
    checkmate::assert_class(df, "ccw_clones_long")
@@ -60,9 +62,9 @@ generate_ccw <- function(df, predvars) {
    }
 
    # Create weights
-   df_1 <- generate_ccw_calc_weights(df[df$clone == 1L, ], event_times_df, predvars)
+   df_1 <- generate_ccw_calc_weights(df[df$clone == 1L, ], event_times_df, predvars, stop_if_var_not_estimated)
 
-   df_0 <- generate_ccw_calc_weights(df[df$clone == 0L, ], event_times_df, predvars)
+   df_0 <- generate_ccw_calc_weights(df[df$clone == 0L, ], event_times_df, predvars, stop_if_var_not_estimated)
 
    # Combine 
    df <- rbind(df_0, df_1)
